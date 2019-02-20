@@ -6,6 +6,7 @@ class OwnershipsController < ApplicationController
     
     
     results = RakutenWebService::Ichiba::Item.search(itemCode: @item.code)
+
     
     @item = Item.new(read(results.first))
     @item.save
@@ -14,6 +15,10 @@ class OwnershipsController < ApplicationController
     if params[:type] == 'Want'
       current_user.want(@item)
       flash[:success] = '商品をWantしました'
+    else
+      params[:type] == 'Have'
+      current_user.have(@item)
+      flash[:success] = '商品をHaveしました'
     end
     
     redirect_back(fallback_location: root_path)
@@ -26,6 +31,10 @@ class OwnershipsController < ApplicationController
     if params[:type] == 'Want'
       current_user.unwant(@item)
       flash[:success] = '商品のWantを解除しました'
+    else
+      params[:type] == 'Have'
+      current_user.unhave(@item)
+      flash[:success] = '商品のHaveを解除しました'
     end
     
     redirect_back(fallback_location: root_path)
